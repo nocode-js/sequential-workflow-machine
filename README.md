@@ -1,10 +1,10 @@
 # Sequential Workflow Machine
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fb4rtaz%2Fsequential-workflow-machine%2Fbadge%3Fref%3Dmain&style=flat-square)](https://actions-badge.atrox.dev/b4rtaz/sequential-workflow-machine/goto?ref=main) [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](/LICENSE) [![View this project on NPM](https://img.shields.io/npm/v/sequential-workflow-machine.svg?style=flat-square)](https://npmjs.org/package/sequential-workflow-machine)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fnocode-js%2Fsequential-workflow-machine%2Fbadge%3Fref%3Dmain&style=flat-square)](https://actions-badge.atrox.dev/b4rtaz/sequential-workflow-machine/goto?ref=main) [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](/LICENSE) [![View this project on NPM](https://img.shields.io/npm/v/sequential-workflow-machine.svg?style=flat-square)](https://npmjs.org/package/sequential-workflow-machine)
 
 The powerful sequential workflow machine for frontend and backend applications. It provides a simple API for creating own step execution handlers (activities). It supports multiple types of activities. Internally is uses the [xstate](https://github.com/statelyai/xstate) library.
 
-This engine uses the same data model as the [Sequential Workflow Designer](https://github.com/nocode-js/sequential-workflow-designer). So you can create a workflow definition in the designer and then run it by this engine easily.
+This machine uses the same data model as the [Sequential Workflow Designer](https://github.com/nocode-js/sequential-workflow-designer). So you can create a workflow definition in the designer and then run it by this machine easily.
 
 📝 Check the [documentation](https://nocode-js.com/docs/category/sequential-workflow-machine) for more details.
 
@@ -18,7 +18,7 @@ npm i sequential-workflow-model sequential-workflow-machine
 
 ## 🎬 Usage
 
-You can use the engine in a JavaScript or TypeScript application. We recommend to use TypeScript because a workflow uses a lot of data structures and it's hard to maintain data integrity.
+You can use the machine in a JavaScript or TypeScript application. We recommend to use TypeScript because a workflow uses a lot of data structures and it's hard to maintain data integrity.
 
 At the beginning you need to define the type of your workflow definition.
 
@@ -77,7 +77,7 @@ interface WorkflowGlobalState {
 }
 ```
 
-Prepare activities for your steps. The engine supports multiple types of activities. The basic activity is the atom activity. It's a simple handler that executes an atomic step and updates the global state.
+Prepare activities for your steps. The machine supports multiple types of activities. The basic activity is the atom activity. It's a simple handler that executes an atomic step and updates the global state.
 
 ```ts
 import { createAtomActivity } from 'sequential-workflow-machine';
