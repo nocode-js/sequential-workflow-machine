@@ -1,6 +1,6 @@
 # Sequential Workflow Machine
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fb4rtaz%2Fsequential-workflow-engine%2Fbadge%3Fref%3Dmain&style=flat-square)](https://actions-badge.atrox.dev/b4rtaz/sequential-workflow-engine/goto?ref=main) [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](/LICENSE) [![View this project on NPM](https://img.shields.io/npm/v/sequential-workflow-engine.svg?style=flat-square)](https://npmjs.org/package/sequential-workflow-engine)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fb4rtaz%2Fsequential-workflow-machine%2Fbadge%3Fref%3Dmain&style=flat-square)](https://actions-badge.atrox.dev/b4rtaz/sequential-workflow-machine/goto?ref=main) [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](/LICENSE) [![View this project on NPM](https://img.shields.io/npm/v/sequential-workflow-machine.svg?style=flat-square)](https://npmjs.org/package/sequential-workflow-machine)
 
 The powerful sequential workflow machine for frontend and backend applications. It provides a simple API for creating own step execution handlers (activities). It supports multiple types of activities. Internally is uses the [xstate](https://github.com/statelyai/xstate) library.
 
