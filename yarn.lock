@@ -2621,10 +2621,10 @@ semver@^6.0.0, semver@^6.3.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-sequential-workflow-model@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/sequential-workflow-model/-/sequential-workflow-model-0.1.0.tgz#ed80a6e769810fa68ec4cded7b35e7327d63427a"
-  integrity sha512-VQVJuJQfxid9nYiUPwU5GUc3igeFPeHlgTSoqIaYhzulmZqB3bpLmVg1WY7Ve3lKvG8pjs9NzoissvG8PDhaEQ==
+sequential-workflow-model@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/sequential-workflow-model/-/sequential-workflow-model-0.1.1.tgz#3dc79bbcfaf45f09db1313302a504be843b44847"
+  integrity sha512-1IfXr3ze7uVlXC54xeCtIrG+rP026gjawuBy7MEDmg597MduOw9yKnBpXwAmM9GSN56Zp7gsoMxZGv5kwXIleg==
 
 shebang-command@^2.0.0:
   version "2.0.0"

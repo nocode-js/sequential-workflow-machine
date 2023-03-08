@@ -13,7 +13,11 @@ export default [
 		external: ['xstate'],
 		output: [
 			{
-				file: './lib/index.cjs',
+				file: './lib/esm/index.js',
+				format: 'es'
+			},
+			{
+				file: './lib/cjs/index.cjs',
 				format: 'cjs'
 			}
 		]
