@@ -5,5 +5,5 @@ export function branchName(branchName: string): BranchNameResult {
 }
 
 export function isBranchNameResult(result: unknown): result is BranchNameResult {
-	return Boolean(result) && Boolean((result as BranchNameResult).branchName);
+	return typeof result === 'object' && Boolean((result as BranchNameResult).branchName);
 }
