@@ -1,6 +1,6 @@
 import { StateValue } from 'xstate';
 
-export function getStatePath(stateValue: StateValue): string[] {
+export function readStatePath(stateValue: StateValue): string[] {
 	if (typeof stateValue === 'string') {
 		return [stateValue];
 	}

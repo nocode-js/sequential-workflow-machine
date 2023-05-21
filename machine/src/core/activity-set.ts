@@ -1,9 +1,9 @@
 import { Activity } from '../types';
 
-export class ActivitySet<GlobalState> {
-	public constructor(private readonly activities: Map<string, Activity<GlobalState>>) {}
+export class ActivitySet<TGlobalState> {
+	public constructor(private readonly activities: Map<string, Activity<TGlobalState>>) {}
 
-	public get(stepType: string): Activity<GlobalState> {
+	public get(stepType: string): Activity<TGlobalState> {
 		const provider = this.activities.get(stepType);
 		if (!provider) {
 			throw new Error(`Cannot find activity for step type: ${stepType}`);
@@ -12,8 +12,8 @@ export class ActivitySet<GlobalState> {
 	}
 }
 
-export function createActivitySet<GlobalState>(activities: Activity<GlobalState>[]): ActivitySet<GlobalState> {
-	const map = new Map<string, Activity<GlobalState>>();
+export function createActivitySet<TGlobalState>(activities: Activity<TGlobalState>[]): ActivitySet<TGlobalState> {
+	const map = new Map<string, Activity<TGlobalState>>();
 	for (const activity of activities) {
 		if (map.has(activity.stepType)) {
 			throw new Error(`Duplicate step type: ${activity.stepType}`);

@@ -4,12 +4,12 @@ import { ActivityNodeBuilderResolver } from './activity-node-builder-resolver';
 import { getStepNodeId } from './safe-node-id';
 import { Sequence } from 'sequential-workflow-model';
 
-export class SequenceNodeBuilder<GlobalState> {
-	private readonly resolver = new ActivityNodeBuilderResolver<GlobalState>(this.activitySet, this);
+export class SequenceNodeBuilder<TGlobalState> {
+	private readonly resolver = new ActivityNodeBuilderResolver<TGlobalState>(this.activitySet, this);
 
-	public constructor(private readonly activitySet: ActivitySet<GlobalState>) {}
+	public constructor(private readonly activitySet: ActivitySet<TGlobalState>) {}
 
-	public build(buildingContext: BuildingContext, sequence: Sequence, nextNodeTarget: string): ActivityNodeConfig<GlobalState> {
+	public build(buildingContext: BuildingContext, sequence: Sequence, nextNodeTarget: string): ActivityNodeConfig<TGlobalState> {
 		if (sequence.length === 0) {
 			return {
 				invoke: {
@@ -19,7 +19,7 @@ export class SequenceNodeBuilder<GlobalState> {
 			};
 		}
 
-		const states: Record<string, ActivityNodeConfig<GlobalState>> = {};
+		const states: Record<string, ActivityNodeConfig<TGlobalState>> = {};
 		for (let index = 0; index < sequence.length; index++) {
 			const step = sequence[index];
 			const nodeId = getStepNodeId(step.id);

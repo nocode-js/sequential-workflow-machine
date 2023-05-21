@@ -2,15 +2,15 @@ import { Step } from 'sequential-workflow-model';
 import { ActivityConfig, ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results/interrupt-result';
 
-export type AtomActivityHandler<TStep extends Step, GlobalState, ActivityState> = (
+export type AtomActivityHandler<TStep extends Step, TGlobalState, TActivityState> = (
 	step: TStep,
-	globalState: GlobalState,
-	activityState: ActivityState
+	globalState: TGlobalState,
+	activityState: TActivityState
 ) => Promise<AtomActivityHandlerResult>;
 
 export type AtomActivityHandlerResult = void | InterruptResult;
 
-export interface AtomActivityConfig<TStep extends Step, GlobalState, ActivityState> extends ActivityConfig<TStep> {
-	init: ActivityStateInitializer<GlobalState, ActivityState>;
-	handler: AtomActivityHandler<TStep, GlobalState, ActivityState>;
+export interface AtomActivityConfig<TStep extends Step, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
+	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
+	handler: AtomActivityHandler<TStep, TGlobalState, TActivityState>;
 }

@@ -4,15 +4,15 @@ import { getStepNodeId } from '../../core/safe-node-id';
 import { Step } from 'sequential-workflow-model';
 import { InterruptionActivityConfig } from './types';
 
-export class InterruptionActivityNodeBuilder<TStep extends Step, GlobalState> implements ActivityNodeBuilder<GlobalState> {
-	public constructor(private readonly config: InterruptionActivityConfig<TStep, GlobalState>) {}
+export class InterruptionActivityNodeBuilder<TStep extends Step, TGlobalState> implements ActivityNodeBuilder<TGlobalState> {
+	public constructor(private readonly config: InterruptionActivityConfig<TStep, TGlobalState>) {}
 
-	public build(step: TStep): ActivityNodeConfig<GlobalState> {
+	public build(step: TStep): ActivityNodeConfig<TGlobalState> {
 		const nodeId = getStepNodeId(step.id);
 		return {
 			id: nodeId,
 			invoke: {
-				src: catchUnhandledError((context: MachineContext<GlobalState>) => this.config.handler(step, context.globalState)),
+				src: catchUnhandledError((context: MachineContext<TGlobalState>) => this.config.handler(step, context.globalState)),
 				onDone: [
 					{
 						target: STATE_INTERRUPTED_TARGET

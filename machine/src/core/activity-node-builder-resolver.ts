@@ -2,15 +2,15 @@ import { ActivitySet } from './activity-set';
 import { ActivityNodeBuilder } from '../types';
 import { SequenceNodeBuilder } from './sequence-node-builder';
 
-export class ActivityNodeBuilderResolver<GlobalState> {
-	private readonly builders: Map<string, ActivityNodeBuilder<GlobalState>> = new Map();
+export class ActivityNodeBuilderResolver<TGlobalState> {
+	private readonly builders: Map<string, ActivityNodeBuilder<TGlobalState>> = new Map();
 
 	public constructor(
-		private readonly activitiesSet: ActivitySet<GlobalState>,
-		private readonly sequenceNodeBuilder: SequenceNodeBuilder<GlobalState>
+		private readonly activitiesSet: ActivitySet<TGlobalState>,
+		private readonly sequenceNodeBuilder: SequenceNodeBuilder<TGlobalState>
 	) {}
 
-	public resolve(stepType: string): ActivityNodeBuilder<GlobalState> {
+	public resolve(stepType: string): ActivityNodeBuilder<TGlobalState> {
 		let builder = this.builders.get(stepType);
 		if (builder) {
 			return builder;

@@ -1,24 +1,23 @@
 import { ActivityNodeBuilder, MachineContext, ActivityNodeConfig, STATE_FAILED_TARGET, STATE_INTERRUPTED_TARGET } from '../../types';
-import { ActivityStateAccessor } from '../../core/activity-context-accessor';
+import { ActivityStateProvider } from '../../core/activity-context-provider';
 import { AtomActivityConfig } from './types';
 import { catchUnhandledError } from '../../core/catch-unhandled-error';
 import { getStepNodeId } from '../../core/safe-node-id';
 import { Step } from 'sequential-workflow-model';
 import { isInterruptResult } from '../results/interrupt-result';
 
-export class AtomActivityNodeBuilder<TStep extends Step, GlobalState, ActivityState> implements ActivityNodeBuilder<GlobalState> {
-	public constructor(
-		private readonly activityStateAccessor: ActivityStateAccessor<GlobalState, ActivityState>,
-		private readonly config: AtomActivityConfig<TStep, GlobalState, ActivityState>
-	) {}
+export class AtomActivityNodeBuilder<TStep extends Step, TGlobalState, TActivityState> implements ActivityNodeBuilder<TGlobalState> {
+	public constructor(private readonly config: AtomActivityConfig<TStep, TGlobalState, TActivityState>) {}
 
-	public build(step: TStep, nextNodeTarget: string): ActivityNodeConfig<GlobalState> {
+	public build(step: TStep, nextNodeTarget: string): ActivityNodeConfig<TGlobalState> {
+		const activityStateProvider = new ActivityStateProvider(step, this.config.init);
 		const nodeId = getStepNodeId(step.id);
+
 		return {
 			id: nodeId,
 			invoke: {
-				src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
-					const activityState = this.activityStateAccessor.get(context, nodeId);
+				src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
+					const activityState = activityStateProvider.get(context, nodeId);
 
 					const result = await this.config.handler(step, context.globalState, activityState);
 					if (isInterruptResult(result)) {
@@ -29,7 +28,7 @@ export class AtomActivityNodeBuilder<TStep extends Step, GlobalState, ActivitySt
 				onDone: [
 					{
 						target: STATE_INTERRUPTED_TARGET,
-						cond: (context: MachineContext<GlobalState>) => Boolean(context.interrupted)
+						cond: (context: MachineContext<TGlobalState>) => Boolean(context.interrupted)
 					},
 					{
 						target: nextNodeTarget

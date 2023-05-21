@@ -1,4 +1,4 @@
-import { getStatePath } from './core/serialize-state-value';
+import { readStatePath } from './core/state-path-reader';
 import { MachineUnhandledError, SequentialStateMachineInterpreter } from './types';
 
 export class WorkflowMachineInterpreter<GlobalState> {
@@ -14,7 +14,7 @@ export class WorkflowMachineInterpreter<GlobalState> {
 		return {
 			globalState: snapshot.context.globalState,
 			unhandledError: snapshot.context.unhandledError,
-			statePath: getStatePath(snapshot.value)
+			statePath: readStatePath(snapshot.value)
 		};
 	}
 

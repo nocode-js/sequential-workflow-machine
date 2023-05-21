@@ -1,7 +1,7 @@
 import { SequentialStep } from 'sequential-workflow-model';
 import { getLoopStack } from '../loop-stack';
 import { LoopActivityConfig, LoopActivityState } from './types';
-import { ActivityStateAccessor, SequenceNodeBuilder, catchUnhandledError, getStepNodeId } from '../../core';
+import { ActivityStateProvider, SequenceNodeBuilder, catchUnhandledError, getStepNodeId } from '../../core';
 import {
 	ActivityNodeBuilder,
 	ActivityNodeConfig,
@@ -12,14 +12,18 @@ import {
 } from '../../types';
 import { isInterruptResult } from '../results';
 
-export class LoopActivityNodeBuilder<TStep extends SequentialStep, GlobalState, ActivityState> implements ActivityNodeBuilder<GlobalState> {
+export class LoopActivityNodeBuilder<TStep extends SequentialStep, TGlobalState, TActivityState>
+	implements ActivityNodeBuilder<TGlobalState>
+{
 	public constructor(
-		private readonly sequenceNodeBuilder: SequenceNodeBuilder<GlobalState>,
-		private readonly activityStateAccessor: ActivityStateAccessor<GlobalState, LoopActivityState<ActivityState>>,
-		private readonly config: LoopActivityConfig<TStep, GlobalState, ActivityState>
+		private readonly sequenceNodeBuilder: SequenceNodeBuilder<TGlobalState>,
+		private readonly config: LoopActivityConfig<TStep, TGlobalState, TActivityState>
 	) {}
 
-	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<GlobalState> {
+	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<TGlobalState> {
+		const activityStateProvider = new ActivityStateProvider<TStep, TGlobalState, LoopActivityState<TActivityState>>(step, (s, g) => ({
+			activityState: this.config.init(s, g)
+		}));
 		const nodeId = getStepNodeId(step.id);
 
 		const conditionNodeId = `CONDITION.${nodeId}`;
@@ -41,10 +45,10 @@ export class LoopActivityNodeBuilder<TStep extends SequentialStep, GlobalState, 
 			states: {
 				ENTER: {
 					invoke: {
-						src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
+						src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
 							if (this.config.onEnter) {
-								const internalContext = this.activityStateAccessor.get(context, nodeId);
-								this.config.onEnter(step, context.globalState, internalContext.activityState);
+								const internalState = activityStateProvider.get(context, nodeId);
+								this.config.onEnter(step, context.globalState, internalState.activityState);
 							}
 						}),
 						onDone: 'CONDITION',
@@ -54,8 +58,8 @@ export class LoopActivityNodeBuilder<TStep extends SequentialStep, GlobalState, 
 				CONDITION: {
 					id: conditionNodeId,
 					invoke: {
-						src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
-							const internalState = this.activityStateAccessor.get(context, nodeId);
+						src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
+							const internalState = activityStateProvider.get(context, nodeId);
 
 							const result = await this.config.condition(step, context.globalState, internalState.activityState);
 							if (isInterruptResult(result)) {
@@ -68,12 +72,12 @@ export class LoopActivityNodeBuilder<TStep extends SequentialStep, GlobalState, 
 						onDone: [
 							{
 								target: STATE_INTERRUPTED_TARGET,
-								cond: (context: MachineContext<GlobalState>) => Boolean(context.interrupted)
+								cond: (context: MachineContext<TGlobalState>) => Boolean(context.interrupted)
 							},
 							{
 								target: 'LOOP',
-								cond: (context: MachineContext<GlobalState>) => {
-									const activityState = this.activityStateAccessor.get(context, nodeId);
+								cond: (context: MachineContext<TGlobalState>) => {
+									const activityState = activityStateProvider.get(context, nodeId);
 									return Boolean(activityState.continue);
 								}
 							},
@@ -88,9 +92,9 @@ export class LoopActivityNodeBuilder<TStep extends SequentialStep, GlobalState, 
 				LEAVE: {
 					id: leaveNodeId,
 					invoke: {
-						src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
+						src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
 							if (this.config.onLeave) {
-								const internalState = this.activityStateAccessor.get(context, nodeId);
+								const internalState = activityStateProvider.get(context, nodeId);
 								this.config.onLeave(step, context.globalState, internalState.activityState);
 							}
 						}),

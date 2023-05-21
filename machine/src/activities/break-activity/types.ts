@@ -3,21 +3,21 @@ import { ActivityConfig, ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results';
 import { BreakResult } from './break-result';
 
-export type BreakActivityHandler<TStep extends Step, GlobalState, ActivityState> = (
+export type BreakActivityHandler<TStep extends Step, TGlobalState, TActivityState> = (
 	step: TStep,
-	globalState: GlobalState,
-	activityState: ActivityState
+	globalState: TGlobalState,
+	activityState: TActivityState
 ) => Promise<BreakActivityHandlerResult>;
 
 export type BreakActivityHandlerResult = void | InterruptResult | BreakResult;
 
-export interface BreakActivityConfig<TStep extends Step, GlobalState, ActivityState> extends ActivityConfig<TStep> {
+export interface BreakActivityConfig<TStep extends Step, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
 	loopName: (step: TStep) => string;
-	init: ActivityStateInitializer<GlobalState, ActivityState>;
-	handler: BreakActivityHandler<TStep, GlobalState, ActivityState>;
+	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
+	handler: BreakActivityHandler<TStep, TGlobalState, TActivityState>;
 }
 
-export interface BreakActivityState<ActivityState> {
+export interface BreakActivityState<TActivityState> {
 	break?: boolean;
-	activityState: ActivityState;
+	activityState: TActivityState;
 }

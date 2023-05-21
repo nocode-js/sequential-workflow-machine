@@ -6,7 +6,7 @@ import {
 	STATE_FAILED_TARGET,
 	STATE_INTERRUPTED_TARGET
 } from '../../types';
-import { ActivityStateAccessor } from '../../core/activity-context-accessor';
+import { ActivityStateProvider } from '../../core/activity-context-provider';
 import { ForkActivityConfig, ForkActivityState } from './types';
 import { catchUnhandledError } from '../../core/catch-unhandled-error';
 import { SequenceNodeBuilder } from '../../core/sequence-node-builder';
@@ -15,27 +15,34 @@ import { BranchedStep } from 'sequential-workflow-model';
 import { isBranchNameResult } from '../results/branch-name-result';
 import { isInterruptResult } from '../results/interrupt-result';
 
-export class ForkActivityNodeBuilder<TStep extends BranchedStep, GlobalState, ActivityState> implements ActivityNodeBuilder<GlobalState> {
+export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, TActivityState>
+	implements ActivityNodeBuilder<TGlobalState>
+{
 	public constructor(
-		private readonly sequenceNodeBuilder: SequenceNodeBuilder<GlobalState>,
-		private readonly activityStateAccessor: ActivityStateAccessor<GlobalState, ForkActivityState<ActivityState>>,
-		private readonly config: ForkActivityConfig<TStep, GlobalState, ActivityState>
+		private readonly sequenceNodeBuilder: SequenceNodeBuilder<TGlobalState>,
+		private readonly config: ForkActivityConfig<TStep, TGlobalState, TActivityState>
 	) {}
 
-	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<GlobalState> {
+	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<TGlobalState> {
+		const activityStateProvider = new ActivityStateProvider<TStep, TGlobalState, ForkActivityState<TActivityState>>(step, (s, g) => {
+			return {
+				activityState: this.config.init(s, g)
+			};
+		});
+
 		const nodeId = getStepNodeId(step.id);
 		const branchNames = Object.keys(step.branches);
 
-		const states: Record<string, ActivityNodeConfig<GlobalState>> = {};
+		const states: Record<string, ActivityNodeConfig<TGlobalState>> = {};
 		for (const branchName of branchNames) {
 			const branchNodeId = getBranchNodeId(branchName);
 			states[branchNodeId] = this.sequenceNodeBuilder.build(buildingContext, step.branches[branchName], nextNodeTarget);
 		}
 
-		const CONDITION: ActivityNodeConfig<GlobalState> = {
+		const CONDITION: ActivityNodeConfig<TGlobalState> = {
 			invoke: {
-				src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
-					const internalState = this.activityStateAccessor.get(context, nodeId);
+				src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
+					const internalState = activityStateProvider.get(context, nodeId);
 
 					const result = await this.config.handler(step, context.globalState, internalState.activityState);
 					if (isInterruptResult(result)) {
@@ -56,13 +63,13 @@ export class ForkActivityNodeBuilder<TStep extends BranchedStep, GlobalState, Ac
 				onDone: [
 					{
 						target: STATE_INTERRUPTED_TARGET,
-						cond: (context: MachineContext<GlobalState>) => Boolean(context.interrupted)
+						cond: (context: MachineContext<TGlobalState>) => Boolean(context.interrupted)
 					},
 					...branchNames.map(branchName => {
 						return {
 							target: getBranchNodeId(branchName),
-							cond: (context: MachineContext<GlobalState>) => {
-								const activityState = this.activityStateAccessor.get(context, nodeId);
+							cond: (context: MachineContext<TGlobalState>) => {
+								const activityState = activityStateProvider.get(context, nodeId);
 								return activityState.targetBranchName === branchName;
 							}
 						};
