@@ -6,7 +6,7 @@ import {
 	STATE_INTERRUPTED_TARGET,
 	BuildingContext
 } from '../../types';
-import { ActivityStateAccessor } from '../../core/activity-context-accessor';
+import { ActivityStateProvider } from '../../core/activity-context-provider';
 import { catchUnhandledError } from '../../core/catch-unhandled-error';
 import { getStepNodeId } from '../../core/safe-node-id';
 import { SequentialStep } from 'sequential-workflow-model';
@@ -14,16 +14,16 @@ import { ContainerActivityConfig, ContainerActivityHandler } from './types';
 import { SequenceNodeBuilder } from '../../core';
 import { isInterruptResult } from '../results/interrupt-result';
 
-export class ContainerActivityNodeBuilder<TStep extends SequentialStep, GlobalState, ActivityState>
-	implements ActivityNodeBuilder<GlobalState>
+export class ContainerActivityNodeBuilder<TStep extends SequentialStep, TGlobalState, TActivityState>
+	implements ActivityNodeBuilder<TGlobalState>
 {
 	public constructor(
-		private readonly sequenceNodeBuilder: SequenceNodeBuilder<GlobalState>,
-		private readonly activityStateAccessor: ActivityStateAccessor<GlobalState, ActivityState>,
-		private readonly config: ContainerActivityConfig<TStep, GlobalState, ActivityState>
+		private readonly sequenceNodeBuilder: SequenceNodeBuilder<TGlobalState>,
+		private readonly config: ContainerActivityConfig<TStep, TGlobalState, TActivityState>
 	) {}
 
-	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<GlobalState> {
+	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<TGlobalState> {
+		const activityStateProvider = new ActivityStateProvider<TStep, TGlobalState, TActivityState>(step, this.config.init);
 		const nodeId = getStepNodeId(step.id);
 
 		const enterNodeId = `ENTER.${nodeId}`;
@@ -32,15 +32,15 @@ export class ContainerActivityNodeBuilder<TStep extends SequentialStep, GlobalSt
 
 		const createState = (
 			id: string,
-			handle: ContainerActivityHandler<TStep, GlobalState, ActivityState> | undefined,
+			handle: ContainerActivityHandler<TStep, TGlobalState, TActivityState> | undefined,
 			nextStateNodeTarget: string
 		) => {
 			return {
 				id,
 				invoke: {
-					src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
+					src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
 						if (handle) {
-							const activityState = this.activityStateAccessor.get(context, nodeId);
+							const activityState = activityStateProvider.get(context, nodeId);
 
 							const result = await handle(step, context.globalState, activityState);
 							if (isInterruptResult(result)) {
@@ -52,7 +52,7 @@ export class ContainerActivityNodeBuilder<TStep extends SequentialStep, GlobalSt
 					onDone: [
 						{
 							target: STATE_INTERRUPTED_TARGET,
-							cond: (context: MachineContext<GlobalState>) => Boolean(context.interrupted)
+							cond: (context: MachineContext<TGlobalState>) => Boolean(context.interrupted)
 						},
 						{
 							target: nextStateNodeTarget

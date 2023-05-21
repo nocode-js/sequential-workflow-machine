@@ -3,26 +3,26 @@ import { ActivityConfig, ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results';
 
 export type LoopActivityHandlerResult = boolean | InterruptResult;
-export type LoopActivityEventHandler<TStep extends SequentialStep, GlobalState, ActivityState> = (
+export type LoopActivityEventHandler<TStep extends SequentialStep, TGlobalState, TActivityState> = (
 	step: TStep,
-	globalState: GlobalState,
-	activityState: ActivityState
+	globalState: TGlobalState,
+	activityState: TActivityState
 ) => void;
-export type LoopActivityConditionHandler<TStep extends SequentialStep, GlobalState, ActivityState> = (
+export type LoopActivityConditionHandler<TStep extends SequentialStep, TGlobalState, TActivityState> = (
 	step: TStep,
-	globalState: GlobalState,
-	activityState: ActivityState
+	globalState: TGlobalState,
+	activityState: TActivityState
 ) => Promise<LoopActivityHandlerResult>;
 
-export interface LoopActivityConfig<TStep extends SequentialStep, GlobalState, ActivityState> extends ActivityConfig<TStep> {
+export interface LoopActivityConfig<TStep extends SequentialStep, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
 	loopName: (step: TStep) => string;
-	init: ActivityStateInitializer<GlobalState, ActivityState>;
-	condition: LoopActivityConditionHandler<TStep, GlobalState, ActivityState>;
-	onEnter?: LoopActivityEventHandler<TStep, GlobalState, ActivityState>;
-	onLeave?: LoopActivityEventHandler<TStep, GlobalState, ActivityState>;
+	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
+	condition: LoopActivityConditionHandler<TStep, TGlobalState, TActivityState>;
+	onEnter?: LoopActivityEventHandler<TStep, TGlobalState, TActivityState>;
+	onLeave?: LoopActivityEventHandler<TStep, TGlobalState, TActivityState>;
 }
 
-export interface LoopActivityState<ActivityState> {
+export interface LoopActivityState<TActivityState> {
 	continue?: boolean;
-	activityState: ActivityState;
+	activityState: TActivityState;
 }

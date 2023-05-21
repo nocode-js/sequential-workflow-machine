@@ -9,17 +9,19 @@ import {
 	STATE_FAILED_TARGET,
 	STATE_INTERRUPTED_TARGET
 } from '../../types';
-import { ActivityStateAccessor, catchUnhandledError, getStepNodeId } from '../../core';
+import { ActivityStateProvider, catchUnhandledError, getStepNodeId } from '../../core';
 import { isInterruptResult } from '../results';
 import { isBreakResult } from './break-result';
 
-export class BreakActivityNodeBuilder<TStep extends Step, GlobalState, ActivityState> implements ActivityNodeBuilder<GlobalState> {
-	public constructor(
-		private readonly activityStateAccessor: ActivityStateAccessor<GlobalState, BreakActivityState<ActivityState>>,
-		private readonly config: BreakActivityConfig<TStep, GlobalState, ActivityState>
-	) {}
+export class BreakActivityNodeBuilder<TStep extends Step, TGlobalState, TActivityState> implements ActivityNodeBuilder<TGlobalState> {
+	public constructor(private readonly config: BreakActivityConfig<TStep, TGlobalState, TActivityState>) {}
 
-	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<GlobalState> {
+	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<TGlobalState> {
+		const activityStateProvider = new ActivityStateProvider<TStep, TGlobalState, BreakActivityState<TActivityState>>(step, (s, g) => {
+			return {
+				activityState: this.config.init(s, g)
+			};
+		});
 		const nodeId = getStepNodeId(step.id);
 
 		const loopName = this.config.loopName(step);
@@ -28,8 +30,8 @@ export class BreakActivityNodeBuilder<TStep extends Step, GlobalState, ActivityS
 		return {
 			id: nodeId,
 			invoke: {
-				src: catchUnhandledError(async (context: MachineContext<GlobalState>) => {
-					const internalState = this.activityStateAccessor.get(context, nodeId);
+				src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
+					const internalState = activityStateProvider.get(context, nodeId);
 
 					const result = await this.config.handler(step, context.globalState, internalState.activityState);
 					if (isInterruptResult(result)) {
@@ -42,12 +44,12 @@ export class BreakActivityNodeBuilder<TStep extends Step, GlobalState, ActivityS
 				onDone: [
 					{
 						target: STATE_INTERRUPTED_TARGET,
-						cond: (context: MachineContext<GlobalState>) => Boolean(context.interrupted)
+						cond: (context: MachineContext<TGlobalState>) => Boolean(context.interrupted)
 					},
 					{
 						target: leaveNodeTarget,
-						cond: (context: MachineContext<GlobalState>) => {
-							const internalState = this.activityStateAccessor.get(context, nodeId);
+						cond: (context: MachineContext<TGlobalState>) => {
+							const internalState = activityStateProvider.get(context, nodeId);
 							return Boolean(internalState.break);
 						}
 					},

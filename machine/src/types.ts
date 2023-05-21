@@ -13,47 +13,50 @@ export const STATE_FAILED_TARGET = `#${STATE_FAILED_ID}`;
 
 export type MachineUnhandledError = unknown;
 
-export interface MachineContext<GlobalState> {
+export interface MachineContext<TGlobalState> {
 	interrupted?: string;
 	unhandledError?: MachineUnhandledError;
-	globalState: GlobalState;
+	globalState: TGlobalState;
 	activityStates: Record<string, unknown>;
 }
 
-export interface Activity<GlobalState> {
+export interface Activity<TGlobalState> {
 	stepType: string;
-	nodeBuilderFactory: ActivityNodeBuilderFactory<GlobalState>;
+	nodeBuilderFactory: ActivityNodeBuilderFactory<TGlobalState>;
 }
 
 export interface ActivityConfig<TStep extends Step> {
 	stepType: TStep['type'];
 }
 
-export type ActivityNodeBuilderFactory<GlobalState> = (
-	sequenceNodeBuilder: SequenceNodeBuilder<GlobalState>
-) => ActivityNodeBuilder<GlobalState>;
+export type ActivityNodeBuilderFactory<TGlobalState> = (
+	sequenceNodeBuilder: SequenceNodeBuilder<TGlobalState>
+) => ActivityNodeBuilder<TGlobalState>;
 
 export interface BuildingContext {
 	[name: string]: unknown;
 }
 
-export interface ActivityNodeBuilder<GlobalState> {
-	build(step: Step, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<GlobalState>;
+export interface ActivityNodeBuilder<TGlobalState> {
+	build(step: Step, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<TGlobalState>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActivityNodeConfig<GlobalState> = StateNodeConfig<MachineContext<GlobalState>, Record<string, any>, EventObject>;
+export type ActivityNodeConfig<TGlobalState> = StateNodeConfig<MachineContext<TGlobalState>, Record<string, any>, EventObject>;
 
-export type GlobalStateInitializer<GlobalState> = (definition: Definition) => GlobalState;
+export type GlobalStateInitializer<TGlobalState> = (definition: Definition) => TGlobalState;
 
-export type ActivityStateInitializer<GlobalState, ActivityState> = (globalState: GlobalState) => ActivityState;
+export type ActivityStateInitializer<TStep extends Step, TGlobalState, TActivityState> = (
+	step: TStep,
+	globalState: TGlobalState
+) => TActivityState;
 
-export type SequentialStateMachine<GlobalState> = StateMachine<MachineContext<GlobalState>, StateSchema, EventObject>;
-export type SequentialStateMachineInterpreter<GlobalState> = Interpreter<
-	MachineContext<GlobalState>,
+export type SequentialStateMachine<TGlobalState> = StateMachine<MachineContext<TGlobalState>, StateSchema, EventObject>;
+export type SequentialStateMachineInterpreter<TGlobalState> = Interpreter<
+	MachineContext<TGlobalState>,
 	StateSchema,
 	EventObject,
-	Typestate<MachineContext<GlobalState>>,
+	Typestate<MachineContext<TGlobalState>>,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	any
 >;
