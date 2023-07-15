@@ -1,7 +1,7 @@
 {
 	"name": "sequential-workflow-machine",
 	"description": "Powerful sequential workflow machine for frontend and backend applications.",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"type": "module",
 	"main": "./lib/esm/index.js",
 	"types": "./lib/index.d.ts",
@@ -43,12 +43,12 @@
 		"prettier:fix": "prettier --write ./src"
 	},
 	"peerDependencies": {
-		"sequential-workflow-model": "^0.1.1",
-		"xstate": "^4.37.2"
+		"sequential-workflow-model": "^0.1.4",
+		"xstate": "^4.38.1"
 	},
 	"dependencies": {
-		"sequential-workflow-model": "^0.1.1",
-		"xstate": "^4.37.2"
+		"sequential-workflow-model": "^0.1.4",
+		"xstate": "^4.38.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^29.4.0",

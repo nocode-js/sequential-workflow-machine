@@ -9,8 +9,7 @@ interface TestGlobalState {
 }
 
 const activitySet = createActivitySet<TestGlobalState>([
-	createInterruptionActivity<Step, TestGlobalState>({
-		stepType: 'interrupt',
+	createInterruptionActivity<Step, TestGlobalState>('interrupt', {
 		handler: async (_, globalState) => {
 			globalState.called = true;
 		}

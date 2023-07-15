@@ -1,5 +1,5 @@
 import { Step } from 'sequential-workflow-model';
-import { ActivityConfig, ActivityStateInitializer } from '../../types';
+import { ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results';
 import { BreakResult } from './break-result';
 
@@ -11,7 +11,7 @@ export type BreakActivityHandler<TStep extends Step, TGlobalState, TActivityStat
 
 export type BreakActivityHandlerResult = void | InterruptResult | BreakResult;
 
-export interface BreakActivityConfig<TStep extends Step, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
+export interface BreakActivityConfig<TStep extends Step, TGlobalState, TActivityState extends object> {
 	loopName: (step: TStep) => string;
 	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
 	handler: BreakActivityHandler<TStep, TGlobalState, TActivityState>;

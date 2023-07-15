@@ -1,5 +1,5 @@
 import { Step } from 'sequential-workflow-model';
-import { ActivityConfig, ActivityStateInitializer } from '../../types';
+import { ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results/interrupt-result';
 
 export type AtomActivityHandler<TStep extends Step, TGlobalState, TActivityState> = (
@@ -10,7 +10,7 @@ export type AtomActivityHandler<TStep extends Step, TGlobalState, TActivityState
 
 export type AtomActivityHandlerResult = void | InterruptResult;
 
-export interface AtomActivityConfig<TStep extends Step, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
+export interface AtomActivityConfig<TStep extends Step, TGlobalState, TActivityState extends object> {
 	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
 	handler: AtomActivityHandler<TStep, TGlobalState, TActivityState>;
 }

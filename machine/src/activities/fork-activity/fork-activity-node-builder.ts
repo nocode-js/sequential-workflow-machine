@@ -15,7 +15,7 @@ import { BranchedStep } from 'sequential-workflow-model';
 import { isBranchNameResult } from '../results/branch-name-result';
 import { isInterruptResult } from '../results/interrupt-result';
 
-export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, TActivityState>
+export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, TActivityState extends object>
 	implements ActivityNodeBuilder<TGlobalState>
 {
 	public constructor(

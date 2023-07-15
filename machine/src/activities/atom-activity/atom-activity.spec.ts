@@ -1,4 +1,4 @@
-import { createAtomActivity } from './atom-activity';
+import { createAtomActivity, createAtomActivityFromHandler } from './atom-activity';
 import { createActivitySet } from '../../core/activity-set';
 import { createWorkflowMachineBuilder } from '../../workflow-machine-builder';
 import { STATE_FINISHED_ID, STATE_INTERRUPTED_ID, STATE_FAILED_ID } from '../../types';
@@ -17,34 +17,21 @@ interface SetCounterStep extends Step {
 }
 
 const activitySet = createActivitySet<TestGlobalState>([
-	createAtomActivity<SetCounterStep, TestGlobalState, { x: number }>({
-		stepType: 'setCounter',
+	createAtomActivity<SetCounterStep, TestGlobalState, { x: number }>('setCounter', {
 		init: () => ({ x: 987654321 }),
 		handler: async (step, globalState, activityState) => {
 			expect(activityState.x).toBe(987654321);
 			globalState.counter = step.properties.value;
 		}
 	}),
-	createAtomActivity<Step, TestGlobalState, null>({
-		stepType: 'multiply2',
-		init: () => null,
-		handler: async (_, globalState) => {
-			globalState.counter *= 2;
-		}
+	createAtomActivityFromHandler<Step, TestGlobalState>('multiply2', async (_, globalState) => {
+		globalState.counter *= 2;
 	}),
-	createAtomActivity<Step, TestGlobalState, null>({
-		stepType: 'interrupt',
-		init: () => null,
-		handler: async () => {
-			return interrupt();
-		}
+	createAtomActivityFromHandler<Step, TestGlobalState>('interrupt', async () => {
+		return interrupt();
 	}),
-	createAtomActivity<Step, TestGlobalState, null>({
-		stepType: 'error',
-		init: () => null,
-		handler: async () => {
-			throw new Error('TEST_ERROR');
-		}
+	createAtomActivityFromHandler<Step, TestGlobalState>('error', async () => {
+		throw new Error('TEST_ERROR');
 	})
 ]);
 

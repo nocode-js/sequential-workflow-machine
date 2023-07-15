@@ -53,8 +53,7 @@ const definition: Definition = {
 };
 
 const activitySet = createActivitySet<TestGlobalState>([
-	createLoopActivity<SequentialStep, TestGlobalState>({
-		stepType: 'loop',
+	createLoopActivity<SequentialStep, TestGlobalState>('loop', {
 		loopName: step => String(step.properties['loopName']),
 		init: () => ({}),
 		condition: async (_, globalState) => {
@@ -63,18 +62,16 @@ const activitySet = createActivitySet<TestGlobalState>([
 		}
 	}),
 
-	createAtomActivity({
-		stepType: 'decrement',
-		init: () => null,
+	createAtomActivity('decrement', {
+		init: () => ({}),
 		handler: async (_, globalState) => {
 			globalState.trace += '(decrement)';
 			globalState.alfa--;
 		}
 	}),
 
-	createBreakActivity({
-		stepType: 'breakIfZero',
-		init: () => null,
+	createBreakActivity('breakIfZero', {
+		init: () => ({}),
 		handler: async (_, globalState) => {
 			globalState.trace += '(break)';
 			if (globalState.alfa === 0) {

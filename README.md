@@ -86,8 +86,7 @@ interface DownloadHtmlStepState {
   attempt: number;
 }
 
-const downloadHtmlActivity = createAtomActivity<DownloadHtmlStep, WorkflowGlobalState, DownloadHtmlStepState>({
-  stepType: 'downloadHtml',
+const downloadHtmlActivity = createAtomActivity<DownloadHtmlStep, WorkflowGlobalState, DownloadHtmlStepState>('downloadHtml', {
   init: () => ({
     attempt: 0,
   }),
@@ -103,7 +102,7 @@ Now we can create the activity set. The activity set is a collection of all supp
 ```ts
 import { activitySet } from 'sequential-workflow-machine';
 
-const activitySet =  createActivitySet<WorkflowGlobalState>([
+const activitySet = createActivitySet<WorkflowGlobalState>([
   downloadHtmlActivity,
 ]);
 ```

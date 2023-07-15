@@ -6,7 +6,9 @@ import { getStepNodeId } from '../../core/safe-node-id';
 import { Step } from 'sequential-workflow-model';
 import { isInterruptResult } from '../results/interrupt-result';
 
-export class AtomActivityNodeBuilder<TStep extends Step, TGlobalState, TActivityState> implements ActivityNodeBuilder<TGlobalState> {
+export class AtomActivityNodeBuilder<TStep extends Step, TGlobalState, TActivityState extends object>
+	implements ActivityNodeBuilder<TGlobalState>
+{
 	public constructor(private readonly config: AtomActivityConfig<TStep, TGlobalState, TActivityState>) {}
 
 	public build(step: TStep, nextNodeTarget: string): ActivityNodeConfig<TGlobalState> {

@@ -10,6 +10,10 @@ export class ActivitySet<TGlobalState> {
 		}
 		return provider;
 	}
+
+	public getTypes(): string[] {
+		return Array.from(this.activities.keys());
+	}
 }
 
 export function createActivitySet<TGlobalState>(activities: Activity<TGlobalState>[]): ActivitySet<TGlobalState> {

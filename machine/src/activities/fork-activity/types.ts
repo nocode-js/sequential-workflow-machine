@@ -1,5 +1,5 @@
 import { BranchedStep } from 'sequential-workflow-model';
-import { ActivityConfig, ActivityStateInitializer } from '../../types';
+import { ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results/interrupt-result';
 import { BranchNameResult } from '../results/branch-name-result';
 
@@ -10,7 +10,7 @@ export type ForkActivityHandler<TStep extends BranchedStep, TGlobalState, TActiv
 	activityState: TActivityState
 ) => Promise<ForkActivityHandlerResult>;
 
-export interface ForkActivityConfig<TStep extends BranchedStep, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
+export interface ForkActivityConfig<TStep extends BranchedStep, TGlobalState, TActivityState extends object> {
 	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
 	handler: ForkActivityHandler<TStep, TGlobalState, TActivityState>;
 }

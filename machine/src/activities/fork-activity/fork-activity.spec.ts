@@ -44,15 +44,13 @@ const definition: Definition = {
 };
 
 const activitySet = createActivitySet<TestGlobalState>([
-	createAtomActivity({
-		stepType: 'appendMessage',
+	createAtomActivity('appendMessage', {
 		init: () => ({}),
 		handler: async (step, globalState) => {
 			globalState.message += step.properties['appendMessage'];
 		}
 	}),
-	createForkActivity<BranchedStep, TestGlobalState>({
-		stepType: 'if',
+	createForkActivity<BranchedStep, TestGlobalState>('if', {
 		init: () => ({}),
 		handler: async (_, globalState) => {
 			if (isNaN(globalState.temperature)) {
