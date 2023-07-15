@@ -11,7 +11,7 @@ const fooActivity = createAtomActivity<FooStep, MyGlobalState, FooStateState>({
 })
 
 // New syntax
-const fooActivity = createAtomActivity<FooStep, MyGlobalState, FooStateState>('some', {
+const fooActivity = createAtomActivity<FooStep, MyGlobalState, FooStateState>('foo', {
   init: /* ... */,
   handler: /* ... */,
 })
