@@ -32,7 +32,7 @@
 	},
 	"scripts": {
 		"prepare": "cp ../LICENSE LICENSE && cp ../README.md README.md",
-		"clean": "rm -rf lib && rm -rf build && rm -rf dist",
+		"clean": "rm -rf lib && rm -rf build && rm -rf dist && rm -rf node_modules/.cache/rollup-plugin-typescript2",
 		"start": "rollup -c --watch",
 		"start:clean": "yarn clean && npm run start",
 		"build": "yarn clean && rollup -c",
