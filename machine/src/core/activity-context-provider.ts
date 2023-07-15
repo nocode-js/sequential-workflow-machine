@@ -1,7 +1,7 @@
 import { Step } from 'sequential-workflow-model';
 import { ActivityStateInitializer, MachineContext } from '../types';
 
-export class ActivityStateProvider<TStep extends Step, TGlobalState, TActivityState> {
+export class ActivityStateProvider<TStep extends Step, TGlobalState, TActivityState extends object> {
 	public constructor(
 		private readonly step: TStep,
 		private readonly init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>

@@ -12,7 +12,7 @@ import {
 } from '../../types';
 import { isInterruptResult } from '../results';
 
-export class LoopActivityNodeBuilder<TStep extends SequentialStep, TGlobalState, TActivityState>
+export class LoopActivityNodeBuilder<TStep extends SequentialStep, TGlobalState, TActivityState extends object>
 	implements ActivityNodeBuilder<TGlobalState>
 {
 	public constructor(

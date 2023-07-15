@@ -14,7 +14,7 @@ import { ContainerActivityConfig, ContainerActivityHandler } from './types';
 import { SequenceNodeBuilder } from '../../core';
 import { isInterruptResult } from '../results/interrupt-result';
 
-export class ContainerActivityNodeBuilder<TStep extends SequentialStep, TGlobalState, TActivityState>
+export class ContainerActivityNodeBuilder<TStep extends SequentialStep, TGlobalState, TActivityState extends object>
 	implements ActivityNodeBuilder<TGlobalState>
 {
 	public constructor(

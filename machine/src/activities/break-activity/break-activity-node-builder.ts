@@ -13,7 +13,9 @@ import { ActivityStateProvider, catchUnhandledError, getStepNodeId } from '../..
 import { isInterruptResult } from '../results';
 import { isBreakResult } from './break-result';
 
-export class BreakActivityNodeBuilder<TStep extends Step, TGlobalState, TActivityState> implements ActivityNodeBuilder<TGlobalState> {
+export class BreakActivityNodeBuilder<TStep extends Step, TGlobalState, TActivityState extends object>
+	implements ActivityNodeBuilder<TGlobalState>
+{
 	public constructor(private readonly config: BreakActivityConfig<TStep, TGlobalState, TActivityState>) {}
 
 	public build(step: TStep, nextNodeTarget: string, buildingContext: BuildingContext): ActivityNodeConfig<TGlobalState> {

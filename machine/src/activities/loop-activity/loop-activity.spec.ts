@@ -35,15 +35,13 @@ const definition: Definition = {
 };
 
 const activitySet = createActivitySet<TestGlobalState>([
-	createAtomActivity({
-		stepType: 'increment',
-		init: () => null,
+	createAtomActivity('increment', {
+		init: () => ({}),
 		handler: async (_, globalState) => {
 			globalState.counter++;
 		}
 	}),
-	createLoopActivity<SequentialStep, TestGlobalState>({
-		stepType: 'loop',
+	createLoopActivity<SequentialStep, TestGlobalState>('loop', {
 		loopName: () => 'loop',
 		init: () => ({}),
 		condition: async (_, globalState) => {

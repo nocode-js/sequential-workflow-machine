@@ -12,8 +12,7 @@ interface TestGlobalState {
 }
 
 const activitySet = createActivitySet<TestGlobalState>([
-	createContainerActivity<SequentialStep, TestGlobalState>({
-		stepType: 'block',
+	createContainerActivity<SequentialStep, TestGlobalState>('block', {
 		init: () => ({}),
 		onEnter: async (_, globalState) => {
 			globalState.entered = true;
@@ -22,8 +21,7 @@ const activitySet = createActivitySet<TestGlobalState>([
 			globalState.leaved = true;
 		}
 	}),
-	createAtomActivity<Step, TestGlobalState>({
-		stepType: 'increase',
+	createAtomActivity<Step, TestGlobalState>('increase', {
 		init: () => ({}),
 		handler: async (_, globalState) => {
 			globalState.counter++;

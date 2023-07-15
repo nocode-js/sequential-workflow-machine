@@ -1,5 +1,5 @@
 import { Step } from 'sequential-workflow-model';
-import { ActivityConfig, ActivityStateInitializer } from '../../types';
+import { ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results/interrupt-result';
 
 export type ContainerActivityHandler<TStep extends Step, TGlobalState, TActivityState> = (
@@ -10,7 +10,7 @@ export type ContainerActivityHandler<TStep extends Step, TGlobalState, TActivity
 
 export type ContainerActivityHandlerResult = void | InterruptResult;
 
-export interface ContainerActivityConfig<TStep extends Step, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
+export interface ContainerActivityConfig<TStep extends Step, TGlobalState, TActivityState extends object> {
 	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
 	onEnter?: ContainerActivityHandler<TStep, TGlobalState, TActivityState>;
 	onLeave?: ContainerActivityHandler<TStep, TGlobalState, TActivityState>;

@@ -1,5 +1,5 @@
 import { SequentialStep } from 'sequential-workflow-model';
-import { ActivityConfig, ActivityStateInitializer } from '../../types';
+import { ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results';
 
 export type LoopActivityHandlerResult = boolean | InterruptResult;
@@ -14,7 +14,7 @@ export type LoopActivityConditionHandler<TStep extends SequentialStep, TGlobalSt
 	activityState: TActivityState
 ) => Promise<LoopActivityHandlerResult>;
 
-export interface LoopActivityConfig<TStep extends SequentialStep, TGlobalState, TActivityState> extends ActivityConfig<TStep> {
+export interface LoopActivityConfig<TStep extends SequentialStep, TGlobalState, TActivityState extends object> {
 	loopName: (step: TStep) => string;
 	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
 	condition: LoopActivityConditionHandler<TStep, TGlobalState, TActivityState>;

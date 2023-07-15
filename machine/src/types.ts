@@ -25,10 +25,6 @@ export interface Activity<TGlobalState> {
 	nodeBuilderFactory: ActivityNodeBuilderFactory<TGlobalState>;
 }
 
-export interface ActivityConfig<TStep extends Step> {
-	stepType: TStep['type'];
-}
-
 export type ActivityNodeBuilderFactory<TGlobalState> = (
 	sequenceNodeBuilder: SequenceNodeBuilder<TGlobalState>
 ) => ActivityNodeBuilder<TGlobalState>;
@@ -46,7 +42,7 @@ export type ActivityNodeConfig<TGlobalState> = StateNodeConfig<MachineContext<TG
 
 export type GlobalStateInitializer<TGlobalState> = (definition: Definition) => TGlobalState;
 
-export type ActivityStateInitializer<TStep extends Step, TGlobalState, TActivityState> = (
+export type ActivityStateInitializer<TStep extends Step, TGlobalState, TActivityState extends object> = (
 	step: TStep,
 	globalState: TGlobalState
 ) => TActivityState;
