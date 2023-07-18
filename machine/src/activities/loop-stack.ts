@@ -34,6 +34,11 @@ export class LoopStack {
 		this.stack.pop();
 	}
 
+	public getCurrentName(): string | null {
+		const item = this.stack[this.stack.length - 1];
+		return item ? item.name : null;
+	}
+
 	public getNodeTarget(nameOrIndex: string | -1): string {
 		let item: LoopStackItem | undefined;
 		if (typeof nameOrIndex === 'number') {

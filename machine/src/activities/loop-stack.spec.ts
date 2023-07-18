@@ -32,6 +32,19 @@ describe('LoopStack', () => {
 		it('throws error when name is not found', () => {
 			expect(() => stack.getNodeTarget('foo')).toThrowError('Loop "foo" not found');
 		});
+
+		it('pop() removes last item', () => {
+			expect(stack.getCurrentName()).toBe('loop3');
+
+			stack.pop();
+			expect(stack.getCurrentName()).toBe('loop2');
+
+			stack.pop();
+			expect(stack.getCurrentName()).toBe('loop1');
+
+			stack.pop();
+			expect(stack.getCurrentName()).toBe(null);
+		});
 	});
 
 	describe('when stack is empty', () => {
