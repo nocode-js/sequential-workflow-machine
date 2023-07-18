@@ -12,7 +12,7 @@ export type BreakActivityHandler<TStep extends Step, TGlobalState, TActivityStat
 export type BreakActivityHandlerResult = void | InterruptResult | BreakResult;
 
 export interface BreakActivityConfig<TStep extends Step, TGlobalState, TActivityState extends object> {
-	loopName: (step: TStep) => string;
+	loopName: (step: TStep) => string | -1;
 	init: ActivityStateInitializer<TStep, TGlobalState, TActivityState>;
 	handler: BreakActivityHandler<TStep, TGlobalState, TActivityState>;
 }

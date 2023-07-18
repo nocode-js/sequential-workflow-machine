@@ -26,8 +26,8 @@ export class BreakActivityNodeBuilder<TStep extends Step, TGlobalState, TActivit
 		});
 		const nodeId = getStepNodeId(step.id);
 
-		const loopName = this.config.loopName(step);
-		const leaveNodeTarget = getLoopStack(buildingContext).getNodeTarget(loopName);
+		const loopNameOrIndex = this.config.loopName(step);
+		const leaveNodeTarget = getLoopStack(buildingContext).getNodeTarget(loopNameOrIndex);
 
 		return {
 			id: nodeId,
