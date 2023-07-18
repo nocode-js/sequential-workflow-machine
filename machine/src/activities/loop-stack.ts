@@ -34,10 +34,26 @@ export class LoopStack {
 		this.stack.pop();
 	}
 
-	public getNodeTarget(name: string): string {
-		const item = this.stack.find(item => item.name === name);
-		if (!item) {
-			throw new Error(`Loop with name "${name}" not found`);
+	public getCurrentName(): string | null {
+		const item = this.stack[this.stack.length - 1];
+		return item ? item.name : null;
+	}
+
+	public getNodeTarget(nameOrIndex: string | -1): string {
+		let item: LoopStackItem | undefined;
+		if (typeof nameOrIndex === 'number') {
+			if (nameOrIndex !== -1) {
+				throw new Error(`Index ${nameOrIndex} is not supported`);
+			}
+			item = this.stack[this.stack.length - 1];
+			if (!item) {
+				throw new Error('Cannot find any parent loop');
+			}
+		} else {
+			item = this.stack.find(item => item.name === nameOrIndex);
+			if (!item) {
+				throw new Error(`Loop "${nameOrIndex}" not found`);
+			}
 		}
 		return item.leaveNodeTarget;
 	}

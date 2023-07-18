@@ -1,3 +1,14 @@
+## 0.3.1
+
+This version adds a new feature to the `break` activity. Now it is possible to break a parent loop without specifying the name of the loop. The previous approach is still supported.
+
+```ts
+createBreakActivity<BreakStep>('break', {
+  loopName: (step) => -1,
+  // ...
+});
+```
+
 ## 0.3.0
 
 This version changes the syntax of all `create*Activity` functions. The first argument is the step type, the second argument is the configuration.
