@@ -48,7 +48,10 @@ export class LoopActivityNodeBuilder<TStep extends SequentialStep, TGlobalState,
 						src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
 							if (this.config.onEnter) {
 								const internalState = activityStateProvider.get(context, nodeId);
-								this.config.onEnter(step, context.globalState, internalState.activityState);
+								const promise = this.config.onEnter(step, context.globalState, internalState.activityState);
+								if (promise) {
+									await promise;
+								}
 							}
 						}),
 						onDone: 'CONDITION',
@@ -95,7 +98,10 @@ export class LoopActivityNodeBuilder<TStep extends SequentialStep, TGlobalState,
 						src: catchUnhandledError(async (context: MachineContext<TGlobalState>) => {
 							if (this.config.onLeave) {
 								const internalState = activityStateProvider.get(context, nodeId);
-								this.config.onLeave(step, context.globalState, internalState.activityState);
+								const promise = this.config.onLeave(step, context.globalState, internalState.activityState);
+								if (promise) {
+									await promise;
+								}
 							}
 						}),
 						onDone: nextNodeTarget,

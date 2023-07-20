@@ -7,7 +7,7 @@ export type LoopActivityEventHandler<TStep extends SequentialStep, TGlobalState,
 	step: TStep,
 	globalState: TGlobalState,
 	activityState: TActivityState
-) => void;
+) => Promise<void> | void;
 export type LoopActivityConditionHandler<TStep extends SequentialStep, TGlobalState, TActivityState> = (
 	step: TStep,
 	globalState: TGlobalState,
