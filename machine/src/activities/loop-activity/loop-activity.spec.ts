@@ -6,6 +6,7 @@ import { Definition, SequentialStep, Step } from 'sequential-workflow-model';
 
 interface TestGlobalState {
 	counter: number;
+	trace: string;
 }
 
 function createTaskStep(id: string): Step {
@@ -44,7 +45,24 @@ const activitySet = createActivitySet<TestGlobalState>([
 	createLoopActivity<SequentialStep, TestGlobalState>('loop', {
 		loopName: () => 'loop',
 		init: () => ({}),
+		onEnter: (_, globalState) => {
+			return new Promise(resolve => {
+				setTimeout(() => {
+					globalState.trace += '(onEnter)';
+					resolve();
+				}, 10);
+			});
+		},
+		onLeave: (_, globalState) => {
+			return new Promise(resolve => {
+				setTimeout(() => {
+					globalState.trace += '(onLeave)';
+					resolve();
+				}, 10);
+			});
+		},
 		condition: async (_, globalState) => {
+			globalState.trace += '(condition)';
 			return globalState.counter < 3;
 		}
 	})
@@ -58,7 +76,8 @@ describe('LoopActivity', () => {
 		const interpreter = machine
 			.create({
 				init: () => ({
-					counter: 0
+					counter: 0,
+					trace: ''
 				})
 			})
 			.start();
@@ -67,6 +86,7 @@ describe('LoopActivity', () => {
 			const globalState = interpreter.getSnapshot().globalState;
 
 			expect(globalState.counter).toBe(4);
+			expect(globalState.trace).toBe('(onEnter)(condition)(condition)(condition)(onLeave)');
 
 			done();
 		});

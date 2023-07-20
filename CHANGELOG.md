@@ -1,3 +1,7 @@
+## 0.3.2
+
+The `LoopActivityEventHandler` can return `void` or `Promise` now.
+
 ## 0.3.1
 
 This version adds a new feature to the `break` activity. Now it is possible to break a parent loop without specifying the name of the loop. The previous approach is still supported.
@@ -18,14 +22,14 @@ This version changes the syntax of all `create*Activity` functions. The first ar
 const fooActivity = createAtomActivity<FooStep, MyGlobalState, FooStateState>({
   stepType: 'foo',
   init: /* ... */,
-  handler: /* ... */,
-})
+  handler: /* ... */
+});
 
 // New syntax
 const fooActivity = createAtomActivity<FooStep, MyGlobalState, FooStateState>('foo', {
   init: /* ... */,
-  handler: /* ... */,
-})
+  handler: /* ... */
+});
 ```
 
 Additionally this version introduces the `createAtomActivityFromHandler` function. It allows to create an activity by very short syntax. This function creates an activity without the activity state.
