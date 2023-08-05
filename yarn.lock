@@ -2621,10 +2621,10 @@ semver@^6.0.0, semver@^6.3.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-sequential-workflow-model@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/sequential-workflow-model/-/sequential-workflow-model-0.1.4.tgz#fcda9b0d802c00668ff1cd4860bf5c9141cfe788"
-  integrity sha512-z44I8CQqP51sO7gHqH0/7GjmBOt2yczmmEGdRdJaczogDtZ1E6kucLkcvA4LugXFFuxTilYldY7NKFFTK+XWDA==
+sequential-workflow-model@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/sequential-workflow-model/-/sequential-workflow-model-0.2.0.tgz#7266378b67eeef3973a98fd07a32bb753c8666ec"
+  integrity sha512-oK+He1N/0Ogg4Z/7KbAzhBRTJEqpPewQAIV7G9WvxhLcpTHvrR9rTMykDwWDVdroNFiLQYa00nYvjqrCIzYfqg==
 
 shebang-command@^2.0.0:
   version "2.0.0"
@@ -2902,10 +2902,10 @@ write-file-atomic@^4.0.2:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
 
-xstate@^4.38.1:
-  version "4.38.1"
-  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.38.1.tgz#9be54c2dfc44d1d566c697393921edaf6d3c9998"
-  integrity sha512-1gBUcFWBj/rv/pRcP2Bedl5sNRGX2d36CaOx9z7fE9uSiHaOEHIWzLg1B853q2xdUHUA9pEiWKjLZ3can4SJaQ==
+xstate@^4.38.2:
+  version "4.38.2"
+  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.38.2.tgz#1b74544fc9c8c6c713ba77f81c6017e65aa89804"
+  integrity sha512-Fba/DwEPDLneHT3tbJ9F3zafbQXszOlyCJyQqqdzmtlY/cwE2th462KK48yaANf98jHlP6lJvxfNtN0LFKXPQg==
 
 y18n@^5.0.5:
   version "5.0.8"
