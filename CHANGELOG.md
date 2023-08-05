@@ -1,3 +1,7 @@
+## 0.4.0
+
+Updated the `sequential-workflow-model` dependency to the version `0.2.0`.
+
 ## 0.3.2
 
 The `LoopActivityEventHandler` can return `void` or `Promise` now.
