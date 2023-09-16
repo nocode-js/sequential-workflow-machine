@@ -2,7 +2,6 @@ import { createAtomActivity } from '../atom-activity/atom-activity';
 import { createActivitySet } from '../../core/activity-set';
 import { createWorkflowMachineBuilder } from '../../workflow-machine-builder';
 import { createForkActivity } from './fork-activity';
-import { STATE_FAILED_ID, STATE_FINISHED_ID, STATE_INTERRUPTED_ID } from '../../types';
 import { BranchedStep, Definition, Step } from 'sequential-workflow-model';
 import { interrupt } from '../results/interrupt-result';
 import { branchName } from '../results/branch-name-result';
@@ -105,7 +104,7 @@ describe('ForkActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_FINISHED_ID);
+			expect(snapshot.isFinished()).toBe(true);
 			expect(snapshot.globalState.message).toBe('(start)(true)(end)');
 
 			done();
@@ -124,7 +123,7 @@ describe('ForkActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_INTERRUPTED_ID);
+			expect(snapshot.isInterrupted()).toBe(true);
 			expect(snapshot.globalState.message).toBe('(start)');
 
 			done();
@@ -143,8 +142,9 @@ describe('ForkActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_FAILED_ID);
-			expect((snapshot.unhandledError as Error).message).toBe('TEST_ERROR');
+			expect(snapshot.isFailed()).toBe(true);
+			expect(snapshot.unhandledError?.message).toBe('TEST_ERROR');
+			expect(snapshot.unhandledError?.stepId).toBe('0x002');
 			expect(snapshot.globalState.message).toBe('(start)');
 
 			done();

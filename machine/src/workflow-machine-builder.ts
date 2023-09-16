@@ -4,19 +4,21 @@ import { BuildingContext, MachineContext, STATE_FAILED_ID, STATE_FINISHED_ID, ST
 import { SequenceNodeBuilder } from './core/sequence-node-builder';
 import { ActivitySet } from './core/activity-set';
 import { WorkflowMachine } from './workflow-machine';
+import { getStepNodeId } from './core';
 
 export interface BuildConfig {
-	definition: Definition;
+	initialStepId?: string;
 }
 
 export class WorkflowMachineBuilder<GlobalState> {
 	public constructor(private readonly sequenceNodeBuilder: SequenceNodeBuilder<GlobalState>) {}
 
-	public build(definition: Definition): WorkflowMachine<GlobalState> {
+	public build(definition: Definition, config?: BuildConfig): WorkflowMachine<GlobalState> {
 		const buildingContext: BuildingContext = {};
 
+		const initial = config?.initialStepId ? getStepNodeId(config.initialStepId) : 'MAIN';
 		const machine = createMachine<MachineContext<GlobalState>>({
-			initial: 'MAIN',
+			initial,
 			predictableActionArguments: true,
 			states: {
 				MAIN: this.sequenceNodeBuilder.build(buildingContext, definition.sequence, STATE_FINISHED_TARGET),

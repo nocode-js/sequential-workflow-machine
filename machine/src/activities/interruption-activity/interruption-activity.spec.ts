@@ -1,6 +1,5 @@
 import { createActivitySet } from '../../core/activity-set';
 import { createWorkflowMachineBuilder } from '../../workflow-machine-builder';
-import { STATE_INTERRUPTED_ID } from '../../types';
 import { Definition, Step } from 'sequential-workflow-model';
 import { createInterruptionActivity } from './interruption-activity';
 
@@ -44,7 +43,9 @@ describe('InterruptionActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_INTERRUPTED_ID);
+			expect(snapshot.isInterrupted()).toBe(true);
+			expect(snapshot.isFinished()).toBe(false);
+			expect(snapshot.isFailed()).toBe(false);
 			expect(snapshot.globalState.called).toBe(true);
 
 			done();

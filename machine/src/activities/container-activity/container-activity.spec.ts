@@ -1,6 +1,5 @@
 import { createActivitySet } from '../../core/activity-set';
 import { createWorkflowMachineBuilder } from '../../workflow-machine-builder';
-import { STATE_FINISHED_ID } from '../../types';
 import { Definition, SequentialStep, Step } from 'sequential-workflow-model';
 import { createContainerActivity } from './container-activity';
 import { createAtomActivity } from '../atom-activity';
@@ -71,7 +70,9 @@ describe('ContainerActivity', () => {
 			.onDone(() => {
 				const snapshot = interpreter.getSnapshot();
 
-				expect(snapshot.statePath[0]).toBe(STATE_FINISHED_ID);
+				expect(snapshot.isFinished()).toBe(true);
+				expect(snapshot.isInterrupted()).toBe(false);
+				expect(snapshot.isFailed()).toBe(false);
 				expect(snapshot.globalState.counter).toBe(2);
 				expect(snapshot.globalState.entered).toBe(true);
 				expect(snapshot.globalState.leaved).toBe(true);

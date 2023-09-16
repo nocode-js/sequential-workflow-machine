@@ -4,7 +4,6 @@ import { createBreakActivity } from './break-activity';
 import { createActivitySet } from '../../core';
 import { createAtomActivity } from '../atom-activity';
 import { createWorkflowMachineBuilder } from '../../workflow-machine-builder';
-import { STATE_FINISHED_ID } from '../../types';
 import { break_ } from './break-result';
 
 interface TestGlobalState {
@@ -98,7 +97,7 @@ describe('BreakActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_FINISHED_ID);
+			expect(snapshot.isFinished()).toBe(true);
 			expect(snapshot.globalState.trace).toBe(
 				'(condition)(decrement)(break)(condition)(decrement)(break)(condition)(decrement)(break)'
 			);
