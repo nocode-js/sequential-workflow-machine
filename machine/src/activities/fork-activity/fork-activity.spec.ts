@@ -5,9 +5,10 @@ import { createForkActivity } from './fork-activity';
 import { BranchedStep, Definition, Step } from 'sequential-workflow-model';
 import { interrupt } from '../results/interrupt-result';
 import { branchName } from '../results/branch-name-result';
+import { skip } from '../results';
 
 interface TestGlobalState {
-	temperature: number;
+	mode: string;
 	message: string;
 }
 
@@ -52,16 +53,22 @@ const activitySet = createActivitySet<TestGlobalState>([
 	createForkActivity<BranchedStep, TestGlobalState>('if', {
 		init: () => ({}),
 		handler: async (_, globalState) => {
-			if (isNaN(globalState.temperature)) {
-				throw new Error('TEST_ERROR');
-			}
-			if (globalState.temperature < 0) {
+			if (globalState.mode === '[interrupt]') {
 				return interrupt();
 			}
-			if (globalState.temperature > 10) {
+			if (globalState.mode === '[fail]') {
+				throw new Error('TEST_ERROR');
+			}
+			if (globalState.mode === '[true]') {
 				return branchName('true');
 			}
-			return branchName('false');
+			if (globalState.mode === '[false]') {
+				return branchName('false');
+			}
+			if (globalState.mode === '[skip]') {
+				return skip();
+			}
+			throw new Error('Unknown mode');
 		}
 	})
 ]);
@@ -77,7 +84,7 @@ function run(definition: Definition, startGlobalState: TestGlobalState) {
 describe('ForkActivity', () => {
 	it('should go by false branch', done => {
 		const startGlobalState: TestGlobalState = {
-			temperature: 0,
+			mode: '[false]',
 			message: ''
 		};
 
@@ -95,7 +102,7 @@ describe('ForkActivity', () => {
 
 	it('should go by true branch', done => {
 		const startGlobalState: TestGlobalState = {
-			temperature: 20,
+			mode: '[true]',
 			message: ''
 		};
 
@@ -114,7 +121,7 @@ describe('ForkActivity', () => {
 
 	it('should interrupt', done => {
 		const startGlobalState: TestGlobalState = {
-			temperature: -20,
+			mode: '[interrupt]',
 			message: ''
 		};
 
@@ -131,9 +138,30 @@ describe('ForkActivity', () => {
 		interpreter.start();
 	});
 
+	it('should skip', done => {
+		const startGlobalState: TestGlobalState = {
+			mode: '[skip]',
+			message: ''
+		};
+
+		const interpreter = run(definition, startGlobalState);
+
+		interpreter.onDone(() => {
+			const snapshot = interpreter.getSnapshot();
+
+			expect(snapshot.isFinished()).toBe(true);
+			expect(snapshot.isInterrupted()).toBe(false);
+			expect(snapshot.isFailed()).toBe(false);
+			expect(snapshot.globalState.message).toBe('(start)(end)');
+
+			done();
+		});
+		interpreter.start();
+	});
+
 	it('should fail', done => {
 		const startGlobalState: TestGlobalState = {
-			temperature: NaN,
+			mode: '[fail]',
 			message: ''
 		};
 
@@ -143,6 +171,8 @@ describe('ForkActivity', () => {
 			const snapshot = interpreter.getSnapshot();
 
 			expect(snapshot.isFailed()).toBe(true);
+			expect(snapshot.isInterrupted()).toBe(false);
+			expect(snapshot.isFinished()).toBe(false);
 			expect(snapshot.unhandledError?.message).toBe('TEST_ERROR');
 			expect(snapshot.unhandledError?.stepId).toBe('0x002');
 			expect(snapshot.globalState.message).toBe('(start)');

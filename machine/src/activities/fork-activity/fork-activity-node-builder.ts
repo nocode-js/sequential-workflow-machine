@@ -14,6 +14,7 @@ import { getBranchNodeId, getStepNodeId } from '../../core/safe-node-id';
 import { BranchedStep } from 'sequential-workflow-model';
 import { isBranchNameResult } from '../results/branch-name-result';
 import { isInterruptResult } from '../results/interrupt-result';
+import { isSkipResult } from '../results';
 
 export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, TActivityState extends object>
 	implements ActivityNodeBuilder<TGlobalState>
@@ -55,6 +56,13 @@ export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, T
 							throw new Error(`Branch ${result.branchName} does not exist`);
 						}
 						internalState.targetBranchName = result.branchName;
+						internalState.skipped = undefined;
+						return;
+					}
+
+					if (isSkipResult(result)) {
+						internalState.targetBranchName = undefined;
+						internalState.skipped = true;
 						return;
 					}
 
@@ -64,6 +72,13 @@ export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, T
 					{
 						target: STATE_INTERRUPTED_TARGET,
 						cond: (context: MachineContext<TGlobalState>) => Boolean(context.interrupted)
+					},
+					{
+						target: nextNodeTarget,
+						cond: (context: MachineContext<TGlobalState>) => {
+							const activityState = activityStateProvider.get(context, nodeId);
+							return Boolean(activityState.skipped);
+						}
 					},
 					...branchNames.map(branchName => {
 						return {
