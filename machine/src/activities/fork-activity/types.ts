@@ -2,8 +2,9 @@ import { BranchedStep } from 'sequential-workflow-model';
 import { ActivityStateInitializer } from '../../types';
 import { InterruptResult } from '../results/interrupt-result';
 import { BranchNameResult } from '../results/branch-name-result';
+import { SkipResult } from '../results';
 
-export type ForkActivityHandlerResult = InterruptResult | BranchNameResult;
+export type ForkActivityHandlerResult = InterruptResult | BranchNameResult | SkipResult;
 export type ForkActivityHandler<TStep extends BranchedStep, TGlobalState, TActivityState> = (
 	step: TStep,
 	globalState: TGlobalState,
@@ -17,5 +18,6 @@ export interface ForkActivityConfig<TStep extends BranchedStep, TGlobalState, TA
 
 export interface ForkActivityState<TActivityState> {
 	targetBranchName?: string;
+	skipped?: true;
 	activityState: TActivityState;
 }

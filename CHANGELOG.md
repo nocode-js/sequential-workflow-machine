@@ -1,3 +1,17 @@
+## 0.5.1
+
+This version adds a new feature to the `fork` activity. Now it's possible to skip all branches. The handler of the `fork` activity should return a value returned by the `skip()` function.
+
+```js
+createForkActivity<BranchedStep, TestGlobalState>('if', {
+  init: () => ({ /* ... */ }),
+  handler: async (step, globalState, activityState) => {
+    // ...
+    return skip();
+  }
+})
+```
+
 ## 0.5.0
 
 This version simplifies error handling:

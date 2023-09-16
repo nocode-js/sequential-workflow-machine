@@ -3,7 +3,7 @@ export interface InterruptResult {
 }
 
 export function isInterruptResult(result: unknown): result is InterruptResult {
-	return typeof result === 'object' && (result as InterruptResult).interrupt;
+	return typeof result === 'object' && (result as InterruptResult).interrupt === true;
 }
 
 export function interrupt(): InterruptResult {
