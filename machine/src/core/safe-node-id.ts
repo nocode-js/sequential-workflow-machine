@@ -1,7 +1,10 @@
+export const STATE_STEP_ID_PREFIX = 'STEP_';
+export const STATE_BRANCH_ID_PREFIX = 'BRANCH_';
+
 export function getStepNodeId(stepId: string): string {
-	return `STEP_${stepId}`;
+	return STATE_STEP_ID_PREFIX + stepId;
 }
 
 export function getBranchNodeId(branchName: string): string {
-	return `BRANCH_${branchName}`;
+	return STATE_BRANCH_ID_PREFIX + branchName;
 }

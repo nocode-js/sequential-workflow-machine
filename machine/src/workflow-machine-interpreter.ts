@@ -1,5 +1,5 @@
-import { readStatePath } from './core/state-path-reader';
-import { MachineUnhandledError, SequentialStateMachineInterpreter } from './types';
+import { SequentialStateMachineInterpreter } from './types';
+import { WorkflowMachineSnapshot } from './workflow-machine-snapshot';
 
 export class WorkflowMachineInterpreter<GlobalState> {
 	public constructor(private readonly interpreter: SequentialStateMachineInterpreter<GlobalState>) {}
@@ -11,11 +11,7 @@ export class WorkflowMachineInterpreter<GlobalState> {
 
 	public getSnapshot(): WorkflowMachineSnapshot<GlobalState> {
 		const snapshot = this.interpreter.getSnapshot();
-		return {
-			globalState: snapshot.context.globalState,
-			unhandledError: snapshot.context.unhandledError,
-			statePath: readStatePath(snapshot.value)
-		};
+		return new WorkflowMachineSnapshot(snapshot.context.globalState, snapshot.context.unhandledError, snapshot.value);
 	}
 
 	public onDone(callback: () => void): this {
@@ -36,10 +32,4 @@ export class WorkflowMachineInterpreter<GlobalState> {
 	public getNative(): SequentialStateMachineInterpreter<GlobalState> {
 		return this.interpreter;
 	}
-}
-
-export interface WorkflowMachineSnapshot<GlobalState> {
-	globalState: GlobalState;
-	unhandledError?: MachineUnhandledError;
-	statePath: string[];
 }

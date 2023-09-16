@@ -21,16 +21,16 @@ function createTaskStep(id: string): Step {
 
 const definition: Definition = {
 	sequence: [
-		createTaskStep('0x001'),
+		createTaskStep('task_a'),
 		{
-			id: '0x002',
+			id: 'loop',
 			componentType: 'container',
 			name: 'Loop',
 			type: 'loop',
 			properties: {},
-			sequence: [createTaskStep('0x003')]
+			sequence: [createTaskStep('task_b')]
 		} as SequentialStep,
-		createTaskStep('0x004')
+		createTaskStep('task_c')
 	],
 	properties: {}
 };
@@ -73,6 +73,23 @@ const machine = builder.build(definition);
 
 describe('LoopActivity', () => {
 	it('should iterate', done => {
+		const expectedRun = [
+			{ id: 'loop', path: ['MAIN', 'STEP_loop', 'ENTER'] },
+			{ id: 'loop', path: ['MAIN', 'STEP_loop', 'CONDITION'] },
+			{
+				id: 'task_b',
+				path: ['MAIN', 'STEP_loop', 'LOOP', 'STEP_task_b']
+			},
+			{ id: 'loop', path: ['MAIN', 'STEP_loop', 'CONDITION'] },
+			{
+				id: 'task_b',
+				path: ['MAIN', 'STEP_loop', 'LOOP', 'STEP_task_b']
+			},
+			{ id: 'loop', path: ['MAIN', 'STEP_loop', 'CONDITION'] },
+			{ id: 'loop', path: ['MAIN', 'STEP_loop', 'LEAVE'] },
+			{ id: 'task_c', path: ['MAIN', 'STEP_task_c'] },
+			{ id: null, path: ['FINISHED'] }
+		];
 		const interpreter = machine
 			.create({
 				init: () => ({
@@ -81,10 +98,23 @@ describe('LoopActivity', () => {
 				})
 			})
 			.start();
+		let index = 0;
 
+		interpreter.onChange(() => {
+			const snapshot = interpreter.getSnapshot();
+			expect(snapshot.getStatePath()).toMatchObject(expectedRun[index].path);
+			expect(snapshot.tryGetCurrentStepId()).toBe(expectedRun[index].id);
+			expect(snapshot.isFailed()).toBe(false);
+			expect(snapshot.isFinished()).toBe(index === 8);
+			expect(snapshot.isInterrupted()).toBe(false);
+			index++;
+		});
 		interpreter.onDone(() => {
-			const globalState = interpreter.getSnapshot().globalState;
+			const snapshot = interpreter.getSnapshot();
+			const globalState = snapshot.globalState;
 
+			expect(index).toBe(9);
+			expect(snapshot.isFinished()).toBe(true);
 			expect(globalState.counter).toBe(4);
 			expect(globalState.trace).toBe('(onEnter)(condition)(condition)(condition)(onLeave)');
 

@@ -1,6 +1,7 @@
 import { EventObject, Interpreter, StateMachine, StateNodeConfig, StateSchema, Typestate } from 'xstate';
 import { SequenceNodeBuilder } from './core/sequence-node-builder';
 import { Definition, Step } from 'sequential-workflow-model';
+import { MachineUnhandledError } from './machine-unhandled-error';
 
 export const STATE_INTERRUPTED_ID = 'INTERRUPTED';
 export const STATE_INTERRUPTED_TARGET = `#${STATE_INTERRUPTED_ID}`;
@@ -10,8 +11,6 @@ export const STATE_FINISHED_TARGET = `#${STATE_FINISHED_ID}`;
 
 export const STATE_FAILED_ID = 'FAILED';
 export const STATE_FAILED_TARGET = `#${STATE_FAILED_ID}`;
-
-export type MachineUnhandledError = unknown;
 
 export interface MachineContext<TGlobalState> {
 	interrupted?: string;

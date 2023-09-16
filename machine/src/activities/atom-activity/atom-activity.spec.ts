@@ -1,7 +1,6 @@
 import { createAtomActivity, createAtomActivityFromHandler } from './atom-activity';
 import { createActivitySet } from '../../core/activity-set';
 import { createWorkflowMachineBuilder } from '../../workflow-machine-builder';
-import { STATE_FINISHED_ID, STATE_INTERRUPTED_ID, STATE_FAILED_ID } from '../../types';
 import { Definition, Step } from 'sequential-workflow-model';
 import { interrupt } from '../results/interrupt-result';
 
@@ -72,7 +71,9 @@ describe('AtomActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_FINISHED_ID);
+			expect(snapshot.isFinished()).toBe(true);
+			expect(snapshot.isFailed()).toBe(false);
+			expect(snapshot.isInterrupted()).toBe(false);
 			expect(snapshot.globalState.counter).toBe(20);
 
 			done();
@@ -99,7 +100,9 @@ describe('AtomActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_INTERRUPTED_ID);
+			expect(snapshot.isInterrupted()).toBe(true);
+			expect(snapshot.isFailed()).toBe(false);
+			expect(snapshot.isFinished()).toBe(false);
 			expect(snapshot.globalState.counter).toBe(0);
 
 			done();
@@ -126,9 +129,12 @@ describe('AtomActivity', () => {
 		interpreter.onDone(() => {
 			const snapshot = interpreter.getSnapshot();
 
-			expect(snapshot.statePath[0]).toBe(STATE_FAILED_ID);
+			expect(snapshot.isFailed()).toBe(true);
+			expect(snapshot.isFinished()).toBe(false);
+			expect(snapshot.isInterrupted()).toBe(false);
 			expect(snapshot.unhandledError).toBeInstanceOf(Error);
-			expect((snapshot.unhandledError as Error).message).toBe('TEST_ERROR');
+			expect(snapshot.unhandledError?.message).toBe('TEST_ERROR');
+			expect(snapshot.unhandledError?.stepId).toBe('0x2');
 
 			done();
 		});

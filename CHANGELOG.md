@@ -1,3 +1,10 @@
+## 0.5.0
+
+This version simplifies error handling:
+
+* The `getSnapshot()` method now returns an instance of the `WorkflowMachineSnapshot` class, which includes three new methods: `isFinished()`, `isFailed()`, and `isInterrupted()`. Additionally, you can retrieve the id of the last executing step by calling the `tryGetCurrentStepId()` method.
+* The `unhandledError` property of the snapshot class is always an instance of the `MachineUnhandledError` class.
+
 ## 0.4.0
 
 Updated the `sequential-workflow-model` dependency to the version `0.2.0`.
