@@ -112,6 +112,8 @@ describe('ForkActivity', () => {
 			const snapshot = interpreter.getSnapshot();
 
 			expect(snapshot.isFinished()).toBe(true);
+			expect(snapshot.isInterrupted()).toBe(false);
+			expect(snapshot.isFailed()).toBe(false);
 			expect(snapshot.globalState.message).toBe('(start)(true)(end)');
 
 			done();
@@ -131,6 +133,8 @@ describe('ForkActivity', () => {
 			const snapshot = interpreter.getSnapshot();
 
 			expect(snapshot.isInterrupted()).toBe(true);
+			expect(snapshot.isFinished()).toBe(false);
+			expect(snapshot.isFailed()).toBe(false);
 			expect(snapshot.globalState.message).toBe('(start)');
 
 			done();

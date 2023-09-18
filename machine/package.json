@@ -1,7 +1,7 @@
 {
 	"name": "sequential-workflow-machine",
 	"description": "Powerful sequential workflow machine for frontend and backend applications.",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"type": "module",
 	"main": "./lib/esm/index.js",
 	"types": "./lib/index.d.ts",
