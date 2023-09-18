@@ -1,3 +1,7 @@
+## 0.5.2
+
+This version adds a possibility to stop a workflow machine. To stop a workflow machine, you should call the `tryStop()` method of the `WorkflowMachineInterpreter` class.
+
 ## 0.5.1
 
 This version adds a new feature to the `fork` activity. Now it's possible to skip all branches. The handler of the `fork` activity should return a value returned by the `skip()` function.

@@ -98,6 +98,8 @@ describe('BreakActivity', () => {
 			const snapshot = interpreter.getSnapshot();
 
 			expect(snapshot.isFinished()).toBe(true);
+			expect(snapshot.isInterrupted()).toBe(false);
+			expect(snapshot.isFailed()).toBe(false);
 			expect(snapshot.globalState.trace).toBe(
 				'(condition)(decrement)(break)(condition)(decrement)(break)(condition)(decrement)(break)'
 			);
