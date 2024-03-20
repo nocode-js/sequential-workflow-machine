@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fnocode-js%2Fsequential-workflow-machine%2Fbadge%3Fref%3Dmain&style=flat-square)](https://actions-badge.atrox.dev/b4rtaz/sequential-workflow-machine/goto?ref=main) [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](/LICENSE) [![View this project on NPM](https://img.shields.io/npm/v/sequential-workflow-machine.svg?style=flat-square)](https://npmjs.org/package/sequential-workflow-machine)
 
-The powerful sequential workflow machine for frontend and backend applications. It provides a simple API for creating own step execution handlers (activities). It supports multiple types of activities. Internally is uses the [xstate](https://github.com/statelyai/xstate) library.
+The powerful sequential workflow machine for frontend and backend applications. It provides a simple API for creating its own step execution handlers (activities). It supports multiple types of activities. Internally it uses the [xstate](https://github.com/statelyai/xstate) library.
 
 This machine uses the same data model as the [Sequential Workflow Designer](https://github.com/nocode-js/sequential-workflow-designer). So you can create a workflow definition in the designer and then run it by this machine easily.
 
@@ -18,9 +18,9 @@ npm i sequential-workflow-model sequential-workflow-machine
 
 ## 🎬 Usage
 
-You can use the machine in a JavaScript or TypeScript application. We recommend to use TypeScript because a workflow uses a lot of data structures and it's hard to maintain data integrity.
+You can use the machine in a JavaScript or TypeScript application. We recommend using TypeScript because a workflow uses a lot of data structures and it's hard to maintain data integrity.
 
-At the beginning you need to define the type of your workflow definition.
+At the beginning, you need to define the type of your workflow definition.
 
 ```ts
 import { Definition } from 'sequential-workflow-model';
@@ -100,7 +100,7 @@ const downloadHtmlActivity = createAtomActivity<DownloadHtmlStep, WorkflowGlobal
 Now we can create the activity set. The activity set is a collection of all supported activities.
 
 ```ts
-import { activitySet } from 'sequential-workflow-machine';
+import { createActivitySet } from 'sequential-workflow-machine';
 
 const activitySet = createActivitySet<WorkflowGlobalState>([
   downloadHtmlActivity,
