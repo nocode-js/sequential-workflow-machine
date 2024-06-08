@@ -1,3 +1,11 @@
+## 0.6.0
+
+This version introduces the [parallel activity](https://nocode-js.com/docs/sequential-workflow-machine/activities/parallel-activity). The parallel activity allows to execute in the same time many activities.
+
+**Breaking Changes**
+
+* The `getStatePath` method in the `WorkflowMachineSnapshot` class is deleted. Please use the `tryGetStatePath` method or the `getStatePaths` method instead.
+
 ## 0.5.2
 
 This version adds a possibility to stop a workflow machine. To stop a workflow machine, you should call the `tryStop()` method of the `WorkflowMachineInterpreter` class.

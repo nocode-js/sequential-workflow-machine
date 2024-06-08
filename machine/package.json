@@ -1,7 +1,7 @@
 {
 	"name": "sequential-workflow-machine",
 	"description": "Powerful sequential workflow machine for frontend and backend applications.",
-	"version": "0.5.2",
+	"version": "0.6.0",
 	"type": "module",
 	"main": "./lib/esm/index.js",
 	"types": "./lib/index.d.ts",
@@ -44,11 +44,11 @@
 	},
 	"peerDependencies": {
 		"sequential-workflow-model": "^0.2.0",
-		"xstate": "^4.38.2"
+		"xstate": "^4.38.3"
 	},
 	"dependencies": {
 		"sequential-workflow-model": "^0.2.0",
-		"xstate": "^4.38.2"
+		"xstate": "^4.38.3"
 	},
 	"devDependencies": {
 		"@types/jest": "^29.4.0",

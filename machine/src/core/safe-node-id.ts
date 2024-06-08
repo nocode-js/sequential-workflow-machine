@@ -5,6 +5,6 @@ export function getStepNodeId(stepId: string): string {
 	return STATE_STEP_ID_PREFIX + stepId;
 }
 
-export function getBranchNodeId(branchName: string): string {
-	return STATE_BRANCH_ID_PREFIX + branchName;
+export function getBranchNodeId(stepId: string, branchName: string): string {
+	return STATE_BRANCH_ID_PREFIX + stepId + '_' + branchName;
 }
