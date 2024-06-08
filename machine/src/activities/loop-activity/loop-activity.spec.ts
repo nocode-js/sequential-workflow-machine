@@ -102,7 +102,7 @@ describe('LoopActivity', () => {
 
 		interpreter.onChange(() => {
 			const snapshot = interpreter.getSnapshot();
-			expect(snapshot.getStatePath()).toMatchObject(expectedRun[index].path);
+			expect(snapshot.tryGetStatePath()).toMatchObject(expectedRun[index].path);
 			expect(snapshot.tryGetCurrentStepId()).toBe(expectedRun[index].id);
 			expect(snapshot.isFailed()).toBe(false);
 			expect(snapshot.isFinished()).toBe(index === 8);

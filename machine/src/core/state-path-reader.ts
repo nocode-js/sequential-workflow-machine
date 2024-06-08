@@ -1,19 +1,23 @@
 import { StateValue } from 'xstate';
 
-export function readStatePath(stateValue: StateValue): string[] {
+export function readStatePaths(stateValue: StateValue): string[][] {
+	const result: string[][] = [];
+	processPath(result, [], stateValue);
+	return result;
+}
+
+function processPath(result: string[][], path: string[], stateValue: StateValue) {
 	if (typeof stateValue === 'string') {
-		return [stateValue];
-	}
-	const path: string[] = [];
-	let current: StateValue = stateValue;
-	while (typeof current === 'object') {
-		const keys: string[] = Object.keys(current);
-		if (keys.length !== 1) {
-			throw new Error('Invalid state value');
+		path.push(stateValue);
+		result.push(path);
+	} else if (typeof stateValue === 'object') {
+		const keys = Object.keys(stateValue);
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			const childPath = i === key.length - 1 ? path : [...path, key];
+			processPath(result, childPath, stateValue[key]);
 		}
-		path.push(keys[0]);
-		current = current[keys[0]];
+	} else {
+		throw new Error('Invalid state value');
 	}
-	path.push(current);
-	return path;
 }

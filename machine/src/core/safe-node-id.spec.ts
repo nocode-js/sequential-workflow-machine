@@ -8,6 +8,6 @@ describe('getStepNodeId()', () => {
 
 describe('getBranchNodeId()', () => {
 	it('returns safe id', () => {
-		expect(getBranchNodeId('true')).toBe('BRANCH_true');
+		expect(getBranchNodeId('someId', 'true')).toBe('BRANCH_someId_true');
 	});
 });

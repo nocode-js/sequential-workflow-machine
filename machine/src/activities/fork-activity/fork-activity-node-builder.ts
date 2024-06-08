@@ -36,7 +36,7 @@ export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, T
 
 		const states: Record<string, ActivityNodeConfig<TGlobalState>> = {};
 		for (const branchName of branchNames) {
-			const branchNodeId = getBranchNodeId(branchName);
+			const branchNodeId = getBranchNodeId(step.id, branchName);
 			states[branchNodeId] = this.sequenceNodeBuilder.build(buildingContext, step.branches[branchName], nextNodeTarget);
 		}
 
@@ -82,7 +82,7 @@ export class ForkActivityNodeBuilder<TStep extends BranchedStep, TGlobalState, T
 					},
 					...branchNames.map(branchName => {
 						return {
-							target: getBranchNodeId(branchName),
+							target: getBranchNodeId(step.id, branchName),
 							cond: (context: MachineContext<TGlobalState>) => {
 								const activityState = activityStateProvider.get(context, nodeId);
 								return activityState.targetBranchName === branchName;
