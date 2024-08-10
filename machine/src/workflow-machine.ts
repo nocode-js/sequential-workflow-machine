@@ -8,7 +8,10 @@ export interface StartConfig<GlobalState> {
 }
 
 export class WorkflowMachine<GlobalState> {
-	public constructor(private readonly definition: Definition, private readonly machine: SequentialStateMachine<GlobalState>) {}
+	public constructor(
+		private readonly definition: Definition,
+		private readonly machine: SequentialStateMachine<GlobalState>
+	) {}
 
 	public create(config: StartConfig<GlobalState>): WorkflowMachineInterpreter<GlobalState> {
 		return this.restore({

@@ -1,5 +1,5 @@
 import { InterpreterStatus } from 'xstate';
-import { SequentialStateMachineInterpreter } from './types';
+import { SequentialStateMachineInterpreter, SignalPayload } from './types';
 import { WorkflowMachineSnapshot } from './workflow-machine-snapshot';
 
 export class WorkflowMachineInterpreter<GlobalState> {
@@ -37,8 +37,10 @@ export class WorkflowMachineInterpreter<GlobalState> {
 		return false;
 	}
 
-	public sendSignal(signalName: string, params?: Record<string, unknown>): this {
-		this.interpreter.send(signalName, params);
+	public sendSignal<P extends SignalPayload>(event: string, payload: P): this {
+		this.interpreter.send(event, {
+			payload
+		});
 		return this;
 	}
 
