@@ -6,3 +6,4 @@ export * from './interruption-activity';
 export * from './loop-activity';
 export * from './parallel-activity';
 export * from './results';
+export * from './signal-activity';

@@ -55,3 +55,5 @@ export type SequentialStateMachineInterpreter<TGlobalState> = Interpreter<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	any
 >;
+
+export type SignalPayload = Record<string, unknown>;

@@ -1,3 +1,7 @@
+## 0.7.0
+
+This version introduces the signal activity. The signal activity stops the execution of the workflow machine and waits for a signal.
+
 ## 0.6.0
 
 This version introduces the [parallel activity](https://nocode-js.com/docs/sequential-workflow-machine/activities/parallel-activity). The parallel activity allows to execute in the same time many activities.
