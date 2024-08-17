@@ -1,4 +1,4 @@
-import { EventObject, Interpreter, StateMachine, StateNodeConfig, StateSchema, Typestate } from 'xstate';
+import { EventObject, Interpreter, StateConfig, StateMachine, StateNodeConfig, StateSchema, Typestate } from 'xstate';
 import { SequenceNodeBuilder } from './core/sequence-node-builder';
 import { Definition, Step } from 'sequential-workflow-model';
 import { MachineUnhandledError } from './machine-unhandled-error';
@@ -57,3 +57,5 @@ export type SequentialStateMachineInterpreter<TGlobalState> = Interpreter<
 >;
 
 export type SignalPayload = Record<string, unknown>;
+
+export type SerializedWorkflowMachineSnapshot<TGlobalState> = StateConfig<MachineContext<TGlobalState>, EventObject>;

@@ -1,3 +1,7 @@
+## 0.7.1
+
+This version introduces experimental support for workflow persistence. Please refer to the `machine/src/activities/signal-activity/signal-activity-persistence.spec.ts` file.
+
 ## 0.7.0
 
 This version introduces the signal activity. The signal activity stops the execution of the workflow machine and waits for a signal.

@@ -7,6 +7,9 @@ import { WorkflowMachine } from './workflow-machine';
 import { getStepNodeId } from './core';
 
 export interface BuildConfig {
+	/**
+	 * @deprecated This property will be removed in the next minor version.
+	 */
 	initialStepId?: string;
 }
 
