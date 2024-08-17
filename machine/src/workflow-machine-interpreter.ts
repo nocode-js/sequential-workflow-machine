@@ -1,18 +1,25 @@
-import { InterpreterStatus } from 'xstate';
-import { SequentialStateMachineInterpreter, SignalPayload } from './types';
+import { InterpreterStatus, State } from 'xstate';
+import { MachineContext, SequentialStateMachineInterpreter, SerializedWorkflowMachineSnapshot, SignalPayload } from './types';
 import { WorkflowMachineSnapshot } from './workflow-machine-snapshot';
 
 export class WorkflowMachineInterpreter<GlobalState> {
-	public constructor(private readonly interpreter: SequentialStateMachineInterpreter<GlobalState>) {}
+	public constructor(
+		private readonly interpreter: SequentialStateMachineInterpreter<GlobalState>,
+		private readonly initState: State<MachineContext<GlobalState>> | undefined
+	) {}
 
 	public start(): this {
-		this.interpreter.start();
+		this.interpreter.start(this.initState);
 		return this;
 	}
 
 	public getSnapshot(): WorkflowMachineSnapshot<GlobalState> {
 		const snapshot = this.interpreter.getSnapshot();
 		return new WorkflowMachineSnapshot(snapshot.context.globalState, snapshot.context.unhandledError, snapshot.value);
+	}
+
+	public serializeSnapshot(): SerializedWorkflowMachineSnapshot<GlobalState> {
+		return this.interpreter.getSnapshot().toJSON() as unknown as SerializedWorkflowMachineSnapshot<GlobalState>;
 	}
 
 	public onDone(callback: () => void): this {

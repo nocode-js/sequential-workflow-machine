@@ -1,6 +1,6 @@
 import { Definition } from 'sequential-workflow-model';
-import { interpret } from 'xstate';
-import { GlobalStateInitializer, MachineContext, SequentialStateMachine } from './types';
+import { interpret, State } from 'xstate';
+import { GlobalStateInitializer, MachineContext, SequentialStateMachine, SerializedWorkflowMachineSnapshot } from './types';
 import { WorkflowMachineInterpreter } from './workflow-machine-interpreter';
 
 export interface StartConfig<GlobalState> {
@@ -22,7 +22,14 @@ export class WorkflowMachine<GlobalState> {
 
 	public restore(context: MachineContext<GlobalState>): WorkflowMachineInterpreter<GlobalState> {
 		const machine = this.machine.withContext(context);
-		return new WorkflowMachineInterpreter(interpret(machine));
+		return new WorkflowMachineInterpreter(interpret(machine), undefined);
+	}
+
+	public deserializeSnapshot(
+		serializedSnapshot: SerializedWorkflowMachineSnapshot<GlobalState>
+	): WorkflowMachineInterpreter<GlobalState> {
+		const initState = this.machine.resolveState(State.create(serializedSnapshot));
+		return new WorkflowMachineInterpreter(interpret(this.machine), initState as unknown as State<MachineContext<GlobalState>>);
 	}
 
 	public getNative(): SequentialStateMachine<GlobalState> {
